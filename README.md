@@ -42,12 +42,32 @@ the equipment's.
 
 ## Running it
 
+### Windows (recommended)
+
+Download or clone the repository, open its `plantguard-ai` folder, and
+double-click **`start_plantguard.bat`**. The launcher will:
+
+1. Check for Python 3.10 or newer.
+2. Install Python 3.12 with Windows Package Manager if Python is missing.
+3. Create a project-only virtual environment.
+4. Install or update all required packages.
+5. Start PlantGuard AI and open `http://localhost:8501` in your browser.
+
+Keep the launcher window open while using the dashboard. Press **Ctrl+C**
+in that window when you are finished.
+
+### Manual setup (Windows, macOS, or Linux)
+
+Run these commands from inside the downloaded/cloned `plantguard-ai`
+folder:
+
 ```bash
-cd PlantGuard-AI-Python
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
 cd plantguard
-streamlit run app.py
+python -m streamlit run app.py
 ```
+
+On macOS or Linux, use `python3` instead of `python` if needed.
 
 Streamlit will print a local URL (usually `http://localhost:8501`) — open
 it in your browser. First run may take a few extra seconds while

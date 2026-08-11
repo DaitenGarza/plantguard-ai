@@ -97,16 +97,32 @@ Write-Host "Keep this window open while using the dashboard."
 Write-Host "Press Ctrl+C here when you are finished."
 Write-Host ""
 
-# Open the browser shortly after Streamlit begins starting.
+# Skip Streamlit's first-run email prompt.
+$env:STREAMLIT_BROWSER_GATHER_USAGE_STATS = "false"
+
+# Wait for the local server to answer before opening the browser.
+$BrowserWaitCommand = @"
+for (`$Attempt = 0; `$Attempt -lt 120; `$Attempt++) {
+    try {
+        Invoke-WebRequest -UseBasicParsing -Uri '$LocalUrl' -TimeoutSec 1 | Out-Null
+        Start-Process '$LocalUrl'
+        break
+    }
+    catch {
+        Start-Sleep -Seconds 1
+    }
+}
+"@
+
 Start-Process powershell.exe -WindowStyle Hidden -ArgumentList @(
     "-NoProfile",
     "-Command",
-    "Start-Sleep -Seconds 4; Start-Process '$LocalUrl'"
+    $BrowserWaitCommand
 )
 
 Push-Location (Join-Path $ProjectRoot "plantguard")
 try {
-    & $VenvPython -m streamlit run $App --server.address localhost --server.port 8501
+    & $VenvPython -m streamlit run $App --server.address localhost --server.port 8501 --browser.gatherUsageStats false
 }
 finally {
     Pop-Location
